@@ -1,0 +1,4 @@
+/etc/ssh/sshd_config
+/etc/hosts
+/etc/network/interfaces
+/etc/mysql/my.cnf

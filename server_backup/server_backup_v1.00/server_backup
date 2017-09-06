@@ -1,0 +1,45 @@
+#!/bin/sh
+# ***********************************************
+#  Server Backup
+#  Date: 06.09.2017
+#  v1.00
+#  Authors:
+#  Vladimir Svishch (IndianBiker)  <mail:5693031@gmail.com>
+#  https://github.com/BikerIndian/Bash
+# ***********************************************
+
+
+DIRROOT=$(cd $(dirname $0) && pwd)		# Working directory
+STOREDIR=$DIRROOT
+TMPDIR="/tmp"					# Temporary directory
+LASTFILE="$DIRROOT/log/last_beckup.txt"		# Last starting date file
+LOGFILE="$DIRROOT/log/log.txt"			# Log-file
+LISTFILE="$DIRROOT/distrib.lst"			# Config-files list file
+
+
+
+if ! [ -d "$DIRROOT/log" ]; then
+mkdir "$DIRROOT/log"
+exit 1
+fi
+
+
+
+# Starting
+echo "`date` *** Start Server Backup process ***" >> $LOGFILE
+
+#*****  Store Configuration  *****
+[ -f $LISTFILE ] &&
+{
+  echo "`date` Compressing Config-files" >> $LOGFILE
+  FILENAME=$STOREDIR/`date +%Y%m%d`cfg.tgz
+  TMPFILENAME=$TMPDIR/`date +%Y%m%d`cfg.tgz
+
+  tar cfz $TMPFILENAME -T $LISTFILE >/dev/null 2>&1
+  mv $TMPFILENAME $FILENAME
+}
+
+
+# Update last starting day
+echo `date -d "1 day ago" +%Y/%m/%d` > $LASTFILE
+echo "`date` *** Complete ***" >> $LOGFILE
